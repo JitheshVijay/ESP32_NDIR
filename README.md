@@ -4,7 +4,7 @@
  
 # AK9723AJ LED driver and Sensor AFE
 
-AK9723AJ is an IR LED driver and Analog Front End (AFE) IC designed for signal processing of IR photo detectors. It features a dual-channel AFE and an ADC for digital output, enabling IR photo detector output signals to be obtained simultaneously. The AK9723AJ is suitable for NDIR (Non-Dispersive Infrared) gas sensing applications using IR LED and IR photo detectors.
+AK9723AJ is an IR LED driver and Analog Front End (AFE) IC designed for signal processing of IR photodetectors. It features a dual-channel AFE and an ADC for digital output, enabling IR photodetector output signals to be obtained simultaneously. The AK9723AJ is suitable for NDIR (Non-Dispersive Infrared) gas sensing applications using IR LED and IR photodetectors.
 
 ## General Description
 
@@ -24,7 +24,7 @@ AK9723AJ is an IR LED driver and Analog Front End (AFE) IC designed for signal p
 
 ## Pin Functions
 
-- I2C communication, interrupt, power-down, test, IR photo detector connections, LED driver output, power supply, and ground
+- I2C communication, interrupt, power-down, test, IR photodetector connections, LED driver output, power supply, and ground
 
 ## Operating Conditions
 
@@ -115,10 +115,10 @@ AK9730AJF21 is a miniaturized mid-infrared light-emitting diode optimized for ND
 
 # Description of Main Code
 
-The main code consists of functions and a main loop to control the AK9723 LED driver and AK9730 photodiode. It initializes the hardware, defines constants, controls the LED, reads photodiode data, and adjusts LED intensity based on ambient light levels. The code utilizes the Wire library for I2C communication and includes comments for clarity and understanding.
+The main code consists of functions and a main loop to control the AK9723 LED driver and AK9730 photodiode. It initializes the hardware, defines constants, controls the LED, reads photodiode data, and adjusts LED intensity based on ambient light levels. The code utilizes the Wire library for I2C communication.
 
 # Description of Header Files
 
-The header files include declarations for functions and constants related to the AK9723 LED driver and AK9730 photodiode. They provide an interface for the main code to interact with the hardware components, abstracting the implementation details and promoting modularity and reusability.
+The header files include declarations for functions and constants related to the AK9723 LED driver and AK9730 photodiode. They provide an interface for the main code to interact with the hardware components.
 
 
