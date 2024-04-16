@@ -19,6 +19,9 @@ void setup() {
   // Initialize I2C communication
   Wire.begin();
 
+  // Set LED driver to power-down mode
+  ledDriver.setOperatingMode(PDN_MODE);
+
   // Initialize LED driver
   ledDriver.init();
 
