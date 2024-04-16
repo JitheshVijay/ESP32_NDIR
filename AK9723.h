@@ -32,33 +32,20 @@
 #define AK9723_REG_CNTL9          0x17  // Control 9
 #define AK9723_REG_CNTL10         0x18  // Control 10
 
-// Status 1 register bits
-#define AK9723_OVCUR_DET_BIT      7 // Overcurrent error flag bit
-#define AK9723_ERR_FLAG_BIT       6  // Error flag bit
-#define AK9723_DRDY_BIT           5  // Data ready bit
-
-// Control 1 register bits
-#define AK9723_MLOOP_MASK         0xF  // Measurement loop setting bits
-
-// Control 5 register bits
-#define AK9723_ERR_DIS_BIT        1  // Error flag interrupt disable bit
-#define AK9723_DRDY_DIS_BIT       0  // Data ready interrupt disable bit
-
-// Control 6 register bits
-#define AK9723_MODE_MASK          2  // Operating mode setting bits
-
 class AK9723 {
 public:
   AK9723(uint8_t address = AK9723_I2C_ADDR);
   ~AK9723();
 
   int begin();
-  int controlLED(uint8_t command);  // Control LED (on/off likely)
-  int setLEDIntensity(uint8_t intensity);  // Set LED intensity (brightness control)
-  int hardwareReset();
-  int softReset();
-  int setOperatingMode(uint8_t mode);  // Set operation mode (standby, single measurement)
-  int readIRSensorData(uint8_t sensorNumber, uint32_t& data);
+  int controlLED(uint8_t command);  // Control LED 
+  int setLEDIntensity(uint8_t intensity);  // Set LED intensity 
+  int hardwareReset(); //Performs a hardware reset on the AK9723 device
+  int softReset(); //Performs a software reset on the AK9723 device
+  int setOperatingMode(uint8_t mode);  // Set operation mode
+  int readIRSensorData(uint8_t sensorNumber, uint32_t& data); // Read data from IR sensor
+  int readRegister(uint8_t reg, uint8_t* data, uint8_t len); // Reads a value to a specified register on AK9723
+  int writeRegister(uint8_t reg, uint8_t value) // Writes a value to a specified register on AK9723
   int readTemperatureSensorData(uint16_t& temperature);// Function to read temperature sensor data
   int readLEDForwardVoltage(uint16_t& voltage);// Function to read LED forward voltage data
 
@@ -149,29 +136,49 @@ int AK9723::readRegister(uint8_t reg, uint8_t* data, uint8_t len) {
   
   // End the transmission
   int error = Wire.endTransmission(false); // Send repeated start
-
-  // Check if transmission was successful
+  // if transmission was successful
   if (error != 0) {
     // Transmission error
-    return -1; // Error: Transmission failed
+    return -1; // Error
   }
-  
   // Request data from the device
   Wire.requestFrom(_address, len);
-  
-  // Check if data was received
+  // if data was received
   if (Wire.available() != len) {
     // Data reception error
-    return -2; // Error: Data reception failed
+    return -2; // Error
   }
-  
   // Read the received data
   for (int i = 0; i < len; i++) {
     data[i] = Wire.read();
   }
-  
   return 0; 
 }
+
+int AK9723::readIRSensorData(uint8_t sensorNumber, uint32_t& data) {
+  uint8_t reg_l, reg_m, reg_h;
+  if (sensorNumber == 1) {
+    reg_l = AK9723_REG_IR1L;
+    reg_m = AK9723_REG_IR1M;
+    reg_h = AK9723_REG_IR1H;
+  } else if (sensorNumber == 2) {
+    reg_l = AK9723_REG_IR2L;
+    reg_m = AK9723_REG_IR2M;
+    reg_h = AK9723_REG_IR2H;
+  } else {
+    return -1;
+  }
+  uint8_t lsb, msb1, msb2;
+  int result = readRegister(reg_l, &lsb, 1);
+  if (result != 0) return result;
+  result = readRegister(reg_m, &msb1, 1);
+  if (result != 0) return result;
+  result = readRegister(reg_h, &msb2, 1);
+  if (result != 0) return result;
+  data = (static_cast<uint32_t>(msb2) << 16) | (static_cast<uint32_t>(msb1) << 8) | lsb;
+  return 0; 
+}
+
 int AK9723::readTemperatureSensorData(uint16_t& temperature) {
   uint8_t temp_lsb, temp_msb;
   int result = readRegister(AK9723_REG_TEML, &temp_lsb, 1); // Read lower 8 bits of temperature data
