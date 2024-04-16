@@ -1,5 +1,5 @@
-#ifndef AK9730_H
-#define AK9730_H
+#ifndef AK9723_H
+#define AK9723_H
 #include <Wire.h>
 
 // I2C address of the AK9723 device
